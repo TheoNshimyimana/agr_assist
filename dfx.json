@@ -1,0 +1,31 @@
+{
+  "canisters": {
+    "agr_assist_backend": {
+      "main": "src/agr_assist_backend/main.mo",
+      "type": "motoko"
+    },
+    "agr_assist_frontend": {
+      "dependencies": [
+        "agr_assist_backend"
+      ],
+      "source": [
+        "src/agr_assist_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "agr_assist_frontend",
+      "build": "npm run build --prefix src/agr_assist_frontend",
+      "headers": {
+        "Content-Security-Policy": "connect-src 'self' https://api.openweathermap.org; default-src 'self'; script-src 'self'"
+      }
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": "mops sources",
+      "fetch_root_key": true
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
