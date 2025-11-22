@@ -23,7 +23,6 @@ import {
 } from "react-icons/fa";
 import Footer from "./Footer";
 
-
 ChartJS.register(
   Title,
   Tooltip,
@@ -38,16 +37,12 @@ const Overview: React.FC = () => {
   const [climateData, setClimateData] = useState<number[]>([]);
   const [cropGrowthData, setCropGrowthData] = useState<number[]>([]);
 
-  
   useEffect(() => {
-    const fetchData = () => {
-      setClimateData([15, 18, 21, 25, 28, 32, 30, 27, 24, 20, 16, 14]); 
-      setCropGrowthData([30, 50, 75, 95, 120, 135, 140, 138, 120, 100, 70, 50]);
-    };
-    fetchData();
+    // Mock data
+    setClimateData([15, 18, 21, 25, 28, 32, 30, 27, 24, 20, 16, 14]);
+    setCropGrowthData([30, 50, 75, 95, 120, 135, 140, 138, 120, 100, 70, 50]);
   }, []);
 
-  
   const climateChartData = {
     labels: [
       "Jan",
@@ -65,7 +60,7 @@ const Overview: React.FC = () => {
     ],
     datasets: [
       {
-        label: "Average Temperature (°C)",
+        label: "Ubushyuhe bwo hagati (°C)",
         data: climateData,
         borderColor: "#ff9800",
         backgroundColor: "rgba(255, 152, 0, 0.2)",
@@ -91,7 +86,7 @@ const Overview: React.FC = () => {
     ],
     datasets: [
       {
-        label: "Crop Growth Rate (%)",
+        label: "Umuvuduko w’Ubwiyongere bw’Ibihingwa (%)",
         data: cropGrowthData,
         borderColor: "#4CAF50",
         backgroundColor: "rgba(76, 175, 80, 0.2)",
@@ -102,109 +97,114 @@ const Overview: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center min-h-screen bg-gray-50 p-6">
-        <h1 className="text-3xl font-bold text-green-500 mb-6">
-          Climate-Smart AGRI-Assist (AI for Sustainable Farming) 🌱
-        </h1>
-        <p className="text-gray-700 mb-6 text-xl">
-          Welcome to{" "}
-          <span className="font-semibold">🌱 Climate Change AGRI-Assist</span>,
-          an AI & Blockchain-powered platform for smart farming. Our system
-          provides real-time insights and analytics to enhance agricultural
-          productivity and sustainability.
-        </p>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-white p-6">
+        <header className="text-center mb-10">
+          <h1 className="text-4xl md:text-5xl font-bold text-green-600 mb-4">
+            AI Powered AGRI-Assist 🌱
+          </h1>
+          <p className="text-gray-700 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+            Murakaza neza kuri{" "}
+            <span className="font-semibold">Climate Change AGRI-Assist</span>,
+            urubuga rukoresha AI na Blockchain mu buhinzi. Dutanga amakuru
+            y’igihe nyacyo yo kunoza umusaruro w’ibihingwa no kubungabunga
+            ibidukikije.
+          </p>
+        </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 w-full max-w-5xl">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-10 max-w-6xl mx-auto">
           <StatCard
             icon={<FaSeedling />}
-            title="50+ Smart Farms"
-            description="Farms using AI for monitoring & optimization."
+            title="13+ Imirima Yubakiye kuri AI"
+            description="Imirima ikoresha AI mu gukurikirana no kunoza imikorere."
           />
           <StatCard
             icon={<FaChartLine />}
-            title="95% Accuracy"
-            description="AI-driven climate & crop predictions."
+            title="95% Ukuri"
+            description="AI itanga ibisubizo by’ibihe n’umusaruro w’ibihingwa."
           />
           <StatCard
             icon={<FaRobot />}
-            title="AI & IoT Integrated"
-            description="Real-time data collection & automation."
+            title="AI & IoT Byuzuzanya"
+            description="Gukusanya amakuru no gukoresha imashini mu gihe nyacyo."
           />
           <StatCard
             icon={<FaGlobe />}
-            title="10+ Countries"
-            description="Implementing AGRI-Assist globally."
+            title="Ibihugu 3+"
+            description="AGRI-Assist duteganya gukorana b'ihihugu bitatu muri Africa."
           />
           <StatCard
             icon={<FaUsers />}
-            title="500+ Farmers"
-            description="Actively benefiting from smart farming insights."
+            title="Abahinzi 13+"
+            description="Ubu turi gukorana n'abahinzi 13 mu Rwanda ."
           />
           <StatCard
             icon={<FaCloudSun />}
-            title="Climate Insights"
-            description="Predicting weather for better farming strategies."
+            title="Amakuru y’Ibidukikije"
+            description="Guhanga uburyo bwo kwirinda imihindagurikire y'ikirere."
           />
           <StatCard
             icon={<FaLeaf />}
-            title="Pest Detection"
-            description="AI detecting crop diseases before they spread."
+            title="Gukurikirana Indwara n’Imibu"
+            description="AI ibona ibimenyetso mbere y’uko indwara zikwira."
           />
           <StatCard
             icon={<FaDatabase />}
-            title="Blockchain Security"
-            description="Secure & transparent agricultural transactions."
+            title="Umutekano muri Blockchain"
+            description="Ibyanditswe byose mu buhinzi birinzwe kandi bisobanutse."
           />
           <StatCard
             icon={<FaTractor />}
-            title="Smart Equipment"
-            description="AI-powered tractors for precision farming."
+            title="Ibikoresho by’Ubwenge"
+            description="Traktori zifashishwa na AI mu buhinzi bwa precision."
           />
         </div>
 
-        <div className="mt-10 w-full max-w-6xl flex flex-col justify-center items-center bg-white p-6 rounded-lg shadow-lg">
-          <h3 className="text-3xl font-semibold text-green-500 mb-4">
-            AI-Driven Insights
+        {/* AI Insights */}
+        <div className="bg-white rounded-xl shadow-lg p-6 max-w-5xl mx-auto mb-10">
+          <h3 className="text-3xl font-semibold text-green-600 mb-4 text-center">
+            Ibitekerezo bya AI
           </h3>
-          <ul className="list-none list-inside text-gray-700 space-y-4 text-lg ">
+          <ul className="list-disc list-inside text-gray-700 space-y-3 text-lg">
             <li>
-              <strong>Crop Monitoring:</strong> AI detects health issues, water
-              levels, and growth rates.
+              <strong>Gukurikirana Ibihingwa:</strong> AI ibona ibibazo
+              by’ubuzima, amazi, n’ubwiyongere bw’ibihingwa.
             </li>
             <li>
-              <strong>Soil Health Analysis:</strong> AI scans nutrients, pH
-              levels, and soil fertility.
+              <strong>Isesengura ry’Ubutaka:</strong> AI isuzuma intungamubiri,
+              pH, n’ubukungu bw’ubutaka.
             </li>
             <li>
-              <strong>Climate Forecasting:</strong> Blockchain-based data for
-              extreme weather alerts.
+              <strong>Kwitegura Igihe:</strong> Amakuru ya blockchain ku byago
+              by’ikirere.
             </li>
             <li>
-              <strong>Pest & Disease Alerts:</strong> Smart AI detects early
-              signs of infestations.
+              <strong>Amakuru ku Mibu n’Indwara:</strong> AI ibona ibimenyetso
+              hakiri kare.
             </li>
             <li>
-              <strong>Market Price Tracking:</strong> Keeps farmers updated on
-              real-time crop prices.
+              <strong>Gukurikirana Ibiciro:</strong> Abahinzi babona amakuru
+              y’igihe nyacyo ku biciro by’imbuto n’ibihingwa.
             </li>
             <li>
-              <strong>Blockchain Transactions:</strong> Secure, transparent
-              record-keeping for agricultural trade.
+              <strong>Blockchain mu Buhinzi:</strong> Ubucuruzi bwizewe kandi
+              busobanutse.
             </li>
           </ul>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 w-full max-w-5xl">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-green-500 mb-4">
-              🌡 Climate Change Trends
+        {/* Charts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-2xl font-semibold text-green-600 mb-4 text-center">
+              🌡 Impinduka z’Ubushyuhe
             </h3>
             <Line data={climateChartData} options={{ responsive: true }} />
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-green-500 mb-4">
-              🌱 Crop Growth Analysis
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-2xl font-semibold text-green-600 mb-4 text-center">
+              🌱 Umuvuduko w’Ubwiyongere bw’Ibihingwa
             </h3>
             <Line data={cropGrowthChartData} options={{ responsive: true }} />
           </div>
@@ -215,7 +215,7 @@ const Overview: React.FC = () => {
   );
 };
 
-
+// Stat Card Component
 const StatCard = ({
   icon,
   title,
@@ -225,13 +225,11 @@ const StatCard = ({
   title: string;
   description: string;
 }) => (
-  <div className="flex flex-col items-center bg-white p-4 rounded-lg shadow-md">
-    <div className="text-green-600 text-4xl">{icon}</div>
-    <h3 className="text-lg font-semibold text-gray-800 mt-2">{title}</h3>
-    <p className="text-gray-600 text-xl mt-3 text-center">{description}</p>
+  <div className="bg-white p-5 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-2 transition-transform duration-300 flex flex-col items-center text-center">
+    <div className="text-green-600 text-4xl mb-2">{icon}</div>
+    <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+    <p className="text-gray-600 mt-2 text-sm md:text-base">{description}</p>
   </div>
- 
 );
-
 
 export default Overview;

@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -28,7 +29,7 @@ interface SoilData {
   microbialActivity: number;
 }
 
-
+// Sample fallback data
 const sampleData: SoilData[] = [
   {
     timestamp: new Date().toISOString(),
@@ -64,7 +65,7 @@ const fetchSoilData = async (): Promise<SoilData[]> => {
   try {
     const response = await fetch("https://api.example.com/soil-data");
     const data = await response.json();
-    
+
     if (!data || data.length === 0) {
       return sampleData;
     }
@@ -79,9 +80,7 @@ const ReportsAndAnalytics: React.FC = () => {
   const [soilData, setSoilData] = useState<SoilData[]>([]);
 
   useEffect(() => {
-    fetchSoilData().then((data) => {
-      setSoilData(data);
-    });
+    fetchSoilData().then((data) => setSoilData(data));
   }, []);
 
   const optimalRanges = {
@@ -100,7 +99,8 @@ const ReportsAndAnalytics: React.FC = () => {
 
   const generatePDF = () => {
     const doc = new jsPDF();
-    doc.text("Soil Health Analysis Report", 20, 20);
+    doc.setFontSize(16);
+    doc.text("Raporo y'Isesengura ry'Ubutaka", 20, 20);
     autoTable(doc, {
       head: [["Parameter", "Value", "Optimal Range"]],
       body: Object.keys(optimalRanges).map((key) => {
@@ -109,111 +109,146 @@ const ReportsAndAnalytics: React.FC = () => {
             ? soilData[soilData.length - 1][key as keyof SoilData]
             : "-";
         const range = optimalRanges[key as keyof typeof optimalRanges];
-        return [key, value, `${range.min} - ${range.max}`];
+        return [
+          key.charAt(0).toUpperCase() + key.slice(1),
+          value,
+          `${range.min} - ${range.max}`,
+        ];
       }),
+      startY: 30,
+      theme: "grid",
+      headStyles: { fillColor: [34, 197, 94], textColor: 255 },
     });
     doc.save("soil_health_report.pdf");
   };
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white p-8">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="mb-8 flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-green-600 flex justify-center items-center gap-3">
-                Reports and Analysis
-              </h1>
-              <p className="text-gray-700 mb-6 text-xl text-center justify-center leading-9">
-                Reports and Analysis" provides comprehensive insights by
-                aggregating key data into clear, visual reports that help
-                stakeholders understand trends and performance.
-              </p>
-              <p className="mt-2 text-gray-500 flex items-center gap-2">
-                <Info className="w-4 h-4" />
-                Last updated:{" "}
-                {soilData.length > 0
-                  ? new Date(
-                      soilData[soilData.length - 1].timestamp
-                    ).toLocaleDateString()
-                  : "-"}
-              </p>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-white p-6">
+        <div className="max-w-6xl mx-auto text-center mb-10">
+          <h1 className="text-4xl font-bold text-green-600 flex justify-center items-center gap-3 mb-3">
+            Raporo n'Isesengura
+          </h1>
+          <p className="text-gray-700 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+            Iyi raporo igaragaza amakuru y'ingenzi ku butaka, ikoresha ibipimo
+            by’ubutaka kugirango habeho isesengura ryimbitse ry’imikorere
+            n’iterambere ry’ubuhinzi.
+          </p>
+          <p className="mt-2 text-gray-500 flex items-center justify-center gap-2">
+            <Info className="w-4 h-4" />
+            Last updated:{" "}
+            {soilData.length > 0
+              ? new Date(
+                  soilData[soilData.length - 1].timestamp
+                ).toLocaleDateString()
+              : "-"}
+          </p>
+        </div>
+
+        {/* Soil Cards */}
+        {soilData.length === 0 ? (
+          <div className="animate-pulse space-y-6">
+            <div className="h-6 bg-gray-200 rounded w-1/3 mx-auto mb-8" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[...Array(10)].map((_, i) => (
+                <div key={i} className="h-40 bg-gray-100 rounded-xl" />
+              ))}
             </div>
           </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {Object.keys(optimalRanges).map((key) => {
+              const value =
+                soilData.length > 0
+                  ? soilData[soilData.length - 1][key as keyof SoilData]
+                  : undefined;
+              const range = optimalRanges[key as keyof typeof optimalRanges];
+              const isOutOfRange =
+                typeof value === "number" &&
+                (value < range.min || value > range.max);
 
-          {/* Cards for Soil Parameters */}
-          {soilData.length === 0 ? (
-            <div className="animate-pulse space-y-6">
-              <div className="h-4 bg-gray-200 rounded w-1/3 mb-8" />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[...Array(10)].map((_, i) => (
-                  <div key={i} className="h-32 bg-gray-100 rounded-xl" />
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {Object.keys(optimalRanges).map((key) => {
-                const value =
-                  soilData.length > 0
-                    ? soilData[soilData.length - 1][key as keyof SoilData]
-                    : undefined;
-                const range = optimalRanges[key as keyof typeof optimalRanges];
-                const isOutOfRange =
-                  typeof value === "number" &&
-                  (value < range.min || value > range.max);
-                return (
+              return (
+                <div
+                  key={key}
+                  className={`bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300 ${
+                    isOutOfRange ? "border-red-500" : ""
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-3 font-semibold text-lg">
+                    <Leaf className="w-5 h-5 text-green-500" />{" "}
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                  </div>
                   <div
-                    key={key}
-                    className={`bg-white rounded-xl p-6 shadow-lg border border-gray-100 ${
-                      isOutOfRange ? "border-red-500" : ""
+                    className={`text-4xl font-bold ${
+                      isOutOfRange ? "text-red-500" : "text-gray-800"
                     }`}
                   >
-                    <h3 className="font-semibold text-lg">
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </h3>
-                    <p
-                      className={`text-4xl font-bold ${
-                        isOutOfRange ? "text-red-500" : "text-gray-800"
-                      }`}
-                    >
-                      {value !== undefined ? value : "No Data"}
-                    </p>
+                    {value !== undefined ? value : "No Data"}
                   </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Chart Section */}
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Soil Parameter Trends
-            </h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={soilData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="timestamp" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="ph" stroke="#8884d8" />
-                <Line type="monotone" dataKey="moisture" stroke="#82ca9d" />
-              </LineChart>
-            </ResponsiveContainer>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Optimal: {range.min} - {range.max}
+                  </p>
+                </div>
+              );
+            })}
           </div>
+        )}
+
+        {/* Chart Section */}
+        <div className="mt-10 bg-white p-6 rounded-xl shadow-lg">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Trends y'Ibipimo by'Ubutaka
+          </h2>
+          <ResponsiveContainer width="100%" height={350}>
+            <LineChart data={soilData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="timestamp"
+                tickFormatter={(tick) => new Date(tick).toLocaleDateString()}
+              />
+              <YAxis />
+              <Tooltip
+                labelFormatter={(label) =>
+                  `Date: ${new Date(label).toLocaleDateString()}`
+                }
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="ph"
+                stroke="#8884d8"
+                strokeWidth={2}
+              />
+              <Line
+                type="monotone"
+                dataKey="moisture"
+                stroke="#82ca9d"
+                strokeWidth={2}
+              />
+              <Line
+                type="monotone"
+                dataKey="nitrogen"
+                stroke="#ff7300"
+                strokeWidth={2}
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
-        <button
-          onClick={generatePDF}
-          className="bg-green-500 text-white px-4 py-2 justify-end text-end rounded flex items-end gap-2"
-        >
-          <Download className="w-5 h-5" /> Download Report
-        </button>
+
+        {/* Download PDF */}
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={generatePDF}
+            className="bg-green-500 text-white px-5 py-3 rounded-lg flex items-center gap-2 hover:bg-green-600 transition"
+          >
+            <Download className="w-5 h-5" /> Download Raporo
+          </button>
+        </div>
       </div>
+
       <Footer />
     </>
   );
 };
 
 export default ReportsAndAnalytics;
-

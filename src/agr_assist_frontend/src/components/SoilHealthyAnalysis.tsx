@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Info,
   Droplet,
   Leaf,
   Sun,
@@ -31,6 +30,7 @@ const SoilHealthyAnalysis: React.FC = () => {
   const [soilData, setSoilData] = useState<SoilData | null>(null);
 
   useEffect(() => {
+    // Simulate API fetch
     const timer = setTimeout(() => {
       setSoilData({
         ph: 6.5,
@@ -46,6 +46,7 @@ const SoilHealthyAnalysis: React.FC = () => {
         microbialActivity: 80,
       });
     }, 1200);
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -63,109 +64,119 @@ const SoilHealthyAnalysis: React.FC = () => {
     microbialActivity: { min: 60, max: 90 },
   };
 
+  const formatKey = (key: string) => {
+    const map: { [key: string]: string } = {
+      ph: "pH",
+      nitrogen: "Azote",
+      phosphorus: "Phosphore",
+      potassium: "Potassium",
+      organicMatter: "Ibinyabuzima",
+      moisture: "Ubusitani",
+      temperature: "Ubushyuhe",
+      salinity: "Salinity",
+      compaction: "Uburyo bw’Ubuhagarike",
+      aeration: "Ikirere",
+      microbialActivity: "Ibikorwa bya Mikorobi",
+    };
+    return map[key] || key;
+  };
+
+  const getUnit = (key: string) => {
+    if (key === "ph") return "pH";
+    if (key === "temperature") return "°C";
+    if (key === "salinity") return "dS/m";
+    return "%";
+  };
+
+  const getProgressColor = (value: number, min: number, max: number) => {
+    if (value < min) return "bg-red-500";
+    if (value > max) return "bg-yellow-500";
+    return "bg-green-500";
+  };
+
+  const iconMap: { [key: string]: JSX.Element } = {
+    ph: <Droplet className="w-5 h-5 text-blue-500" />,
+    nitrogen: <Zap className="w-5 h-5 text-purple-500" />,
+    phosphorus: <Sun className="w-5 h-5 text-orange-500" />,
+    potassium: <Thermometer className="w-5 h-5 text-yellow-500" />,
+    organicMatter: <Leaf className="w-5 h-5 text-green-500" />,
+    moisture: <CloudRain className="w-5 h-5 text-blue-400" />,
+    temperature: <ThermometerSun className="w-5 h-5 text-red-500" />,
+    salinity: <Waves className="w-5 h-5 text-teal-500" />,
+    compaction: <Layers className="w-5 h-5 text-gray-600" />,
+    aeration: <Layers className="w-5 h-5 text-gray-600" />,
+    microbialActivity: <Layers className="w-5 h-5 text-gray-600" />,
+  };
+
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white p-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-8 flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-green-500 mb-5 flex justify-center  gap-3">
-                Soil Health Analysis
-              </h1>
-              <p className="text-gray-700 mb-6 text-xl text-center leading-9">
-                Soil Health Analysis evaluates key soil properties such as pH,
-                moisture, nutrient levels, and microbial activity to determine
-                overall soil fertility and sustainability. This analysis helps
-                optimize agricultural practices.
-              </p>
-            </div>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-white p-6">
+        <div className="max-w-6xl mx-auto text-center mb-10">
+          <h1 className="text-4xl font-bold text-green-600 mb-4">
+            Isesengura ry’Ubuzima bw’Ubutaka
+          </h1>
+          <p className="text-gray-700 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+            Isesengura ry’ubutaka rigenzura ibipimo by’ingenzi nk’umunyu wa pH,
+            amazi, intungamubiri, n’ibikorwa bya mikorobi kugirango hamenyekane
+            imikorere y’ubutaka n’iterambere ry’ubuhinzi.
+          </p>
+        </div>
 
-          {!soilData ? (
-            <div className="animate-pulse space-y-6">
-              <div className="h-4 bg-gray-200 rounded w-1/3 mb-8" />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[...Array(10)].map((_, i) => (
-                  <div key={i} className="h-32 bg-gray-100 rounded-xl" />
-                ))}
-              </div>
-            </div>
-          ) : (
+        {!soilData ? (
+          <div className="animate-pulse space-y-6">
+            <div className="h-6 bg-gray-200 rounded w-1/3 mx-auto mb-6" />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {Object.keys(optimalRanges).map((key) => (
-                <div
-                  key={key}
-                  className="bg-white rounded-xl p-6 shadow-lg border border-gray-100"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-lg flex items-center gap-2">
-                      {key === "ph" ? (
-                        <Droplet className="w-5 h-5 text-blue-500" />
-                      ) : key === "nitrogen" ? (
-                        <Zap className="w-5 h-5 text-purple-500" />
-                      ) : key === "phosphorus" ? (
-                        <Sun className="w-5 h-5 text-orange-500" />
-                      ) : key === "potassium" ? (
-                        <Thermometer className="w-5 h-5 text-yellow-500" />
-                      ) : key === "organicMatter" ? (
-                        <Leaf className="w-5 h-5 text-green-500" />
-                      ) : key === "moisture" ? (
-                        <CloudRain className="w-5 h-5 text-blue-400" />
-                      ) : key === "temperature" ? (
-                        <ThermometerSun className="w-5 h-5 text-red-500" />
-                      ) : key === "salinity" ? (
-                        <Waves className="w-5 h-5 text-teal-500" />
-                      ) : (
-                        <Layers className="w-5 h-5 text-gray-600" />
-                      )}
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </h3>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="text-4xl font-bold text-gray-800">
-                      {soilData[key as keyof SoilData]}
-                      <span className="text-lg text-gray-500 ml-2">
-                        {key === "ph"
-                          ? "pH"
-                          : key === "temperature"
-                          ? "°C"
-                          : key === "salinity"
-                          ? "dS/m"
-                          : "%"}
-                      </span>
-                    </div>
-                    <div className="relative pt-4">
-                      <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-green-400 to-green-600"
-                          style={{
-                            width: `${Math.min(
-                              100,
-                              ((soilData[key as keyof SoilData] -
-                                optimalRanges[key as keyof SoilData].min) /
-                                (optimalRanges[key as keyof SoilData].max -
-                                  optimalRanges[key as keyof SoilData].min)) *
-                                100
-                            )}%`,
-                          }}
-                        />
-                      </div>
-                      <div className="flex justify-between text-sm text-gray-500 mt-2">
-                        <span>
-                          Low ({optimalRanges[key as keyof SoilData].min})
-                        </span>
-                        <span>Optimal</span>
-                        <span>
-                          High ({optimalRanges[key as keyof SoilData].max})
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              {[...Array(10)].map((_, i) => (
+                <div key={i} className="h-40 bg-gray-100 rounded-xl" />
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {Object.keys(optimalRanges).map((key) => {
+              const value = soilData[key as keyof SoilData] as number;
+              const { min, max } =
+                optimalRanges[key as keyof typeof optimalRanges];
+              const progressPercent = Math.min(
+                100,
+                ((value - min) / (max - min)) * 100
+              );
+
+              return (
+                <div
+                  key={key}
+                  className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-2xl transition-shadow duration-300"
+                >
+                  <div className="flex items-center gap-2 mb-3 text-lg font-semibold">
+                    {iconMap[key]}
+                    {formatKey(key)}
+                  </div>
+                  <div className="text-4xl font-bold text-gray-800 mb-3">
+                    {value}
+                    <span className="text-gray-500 text-lg ml-2">
+                      {getUnit(key)}
+                    </span>
+                  </div>
+                  <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className={`${getProgressColor(
+                        value,
+                        min,
+                        max
+                      )} h-full rounded-full`}
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-500 mt-2">
+                    <span>Min ({min})</span>
+                    <span>Optimal</span>
+                    <span>Max ({max})</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
       <Footer />
     </>

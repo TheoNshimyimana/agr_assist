@@ -16,8 +16,11 @@ import DocumentationPage from "./components/Documentation";
 import Maize from "./components/products/Maize";
 import RicePage from "./components/products/Rice";
 import BeansPage from "./components/products/BeansPage";
-
-
+import Settings from "./components/Settings";
+import Paterners from "./components/Paterners";
+import History from "./components/History";
+import Blogs from "./components/Blogs";
+import NotificationsPage from "./components/NotificationsPage";
 
 const App = () => {
   return (
@@ -41,6 +44,11 @@ const App = () => {
           <Route path="maize" element={<Maize />} />
           <Route path="rice" element={<RicePage />} />
           <Route path="beans" element={<BeansPage />} />
+          <Route path="blogs" element={<Blogs />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="our-paterners" element={<Paterners />} />
+          <Route path="history" element={<History />} />
+          <Route path="notification/:id" element={<NotificationsPage />} />
         </Route>
       </Routes>
     </Router>

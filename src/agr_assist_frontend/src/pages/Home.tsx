@@ -26,6 +26,9 @@ const Home = () => {
     { path: "/home/pest-disease-alerts", label: "Pest and Disease Alerts" },
     { path: "/home/soil-health-analysis", label: "Soil Health Analysis" },
     { path: "/home/market-prices", label: "Market Prices" },
+    { path: "/home/our-paterners", label: "Our Paterner" },
+    { path: "/home/blogs", label: "Blogs" },
+    { path: "/home/history", label: "History" },
     { path: "/home/reports-analytics", label: "Reports & Analytics" },
   ];
 
@@ -66,7 +69,7 @@ const Home = () => {
         </aside>
 
         {/* Main Content Area (Scrollable) */}
-        <main className="flex-1 ml-64 p-6 bg-white overflow-y-auto h-screen">
+        <main className="flex-1 ml-64 pt-0  bg-white overflow-y-auto h-screen">
           <Outlet />
         </main>
       </div>

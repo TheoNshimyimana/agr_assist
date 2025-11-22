@@ -2,39 +2,40 @@ import Debug "mo:base/Debug";
 import Array "mo:base/Array";
 
 actor {
+
     // System prompt message
-    let system_prompt : Text = "You are a helpful assistant.";
+    transient let system_prompt : Text = "You are a helpful assistant.";
 
-    // Stores conversation history: user prompts + AI responses
-    var conversation_history : [Text] = [];
+    // Must be transient (not persisted between upgrades)
+    transient var conversation_history : [Text] = [];
 
-    // Public shared function to receive prompts and return responses
+    // Public function to receive user prompts
     public shared func chat(prompt: Text) : async Text {
         Debug.print("Received prompt: " # prompt);
 
         // Add user prompt to conversation history
         conversation_history := Array.append(conversation_history, [prompt]);
 
-        // Create a full prompt by combining system prompt + history
+        // Create full prompt (system prompt + history)
         let full_prompt = system_prompt # "\n" # concat(conversation_history, "\n");
 
-        // Get simulated AI response
+        // Simulated AI response
         let response : Text = await simulateAIResponse(full_prompt);
 
         Debug.print("AI Response: " # response);
 
-        // Add response to history
+        // Save AI response in history
         conversation_history := Array.append(conversation_history, [response]);
 
         return response;
     };
 
-    // Simulated AI function (replace this with actual API logic if needed)
+    // Simulated AI function
     func simulateAIResponse(full_prompt: Text) : async Text {
         return "Simulated AI response for: " # full_prompt;
     };
 
-    // Utility to join array of messages with a separator (like "\n")
+    // Join array of text values with a separator
     func concat(messages: [Text], separator: Text) : Text {
         var result : Text = "";
         var i = 0;
@@ -47,6 +48,7 @@ actor {
             };
             i += 1;
         };
+
         return result;
     };
 }
